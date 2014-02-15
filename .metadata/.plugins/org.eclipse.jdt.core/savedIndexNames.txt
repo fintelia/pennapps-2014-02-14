@@ -1,0 +1,14 @@
+INDEX VERSION 1.126+/Users/spencer/pennapps-2014-02-14/.metadata/.plugins/org.eclipse.jdt.core
+2428917482.index
+3092368073.index
+2786303050.index
+1796419087.index
+1658538953.index
+89370746.index
+2058867609.index
+2522007604.index
+691667788.index
+3242999314.index
+2582973922.index
+3705666522.index
+2488066207.index
