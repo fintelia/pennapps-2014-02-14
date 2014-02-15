@@ -1,14 +1,23 @@
 package org.opencv.samples.tutorial2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.video.BackgroundSubtractorMOG;
+import org.opencv.video.BackgroundSubtractorMOG2;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -24,16 +33,21 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
     private static final int       VIEW_MODE_GRAY     = 1;
     private static final int       VIEW_MODE_CANNY    = 2;
     private static final int       VIEW_MODE_FEATURES = 5;
+    private static final int	   VIEW_MODE_ITEMMOTION = 7;
 
     private int                    mViewMode;
     private Mat                    mRgba;
     private Mat                    mIntermediateMat;
     private Mat                    mGray;
+    private Mat back;
+    private Mat fore;
+    private BackgroundSubtractorMOG2 bg;
 
     private MenuItem               mItemPreviewRGBA;
     private MenuItem               mItemPreviewGray;
     private MenuItem               mItemPreviewCanny;
     private MenuItem               mItemPreviewFeatures;
+    private MenuItem			   mItemMotion;
 
     private CameraBridgeViewBase   mOpenCvCameraView;
 
@@ -47,6 +61,7 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
 
                     // Load native library after(!) OpenCV initialization
                     System.loadLibrary("mixed_sample");
+                    bg = new BackgroundSubtractorMOG2(3,16,true);
 
                     mOpenCvCameraView.enableView();
                 } break;
@@ -82,6 +97,7 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
         mItemPreviewGray = menu.add("Preview GRAY");
         mItemPreviewCanny = menu.add("Canny");
         mItemPreviewFeatures = menu.add("Find features");
+        mItemMotion = menu.add("Motion detect");
         return true;
     }
 
@@ -120,7 +136,8 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         final int viewMode = mViewMode;
-        switch (viewMode) {
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+		switch (viewMode) {
         case VIEW_MODE_GRAY:
             // input frame has gray scale format
             Imgproc.cvtColor(inputFrame.gray(), mRgba, Imgproc.COLOR_GRAY2RGBA, 4);
@@ -141,6 +158,15 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
             mGray = inputFrame.gray();
             FindFeatures(mGray.getNativeObjAddr(), mRgba.getNativeObjAddr());
             break;
+        case VIEW_MODE_ITEMMOTION:
+//        	mRgba = inputFrame.rgba();
+//        	bg.apply(mRgba, fore);
+//        	Imgproc.erode(fore, fore, new Mat());
+//        	Imgproc.dilate(fore, fore, new Mat());
+//        	Imgproc.findContours(fore, contours, null /*hierarchy*/ , Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+//        	Imgproc.drawContours(mRgba, contours, -1, new Scalar(255,0,0));
+//        	Log.i("Frame:", "Drew contours");
+        	break;
         }
 
         return mRgba;
@@ -157,6 +183,8 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
             mViewMode = VIEW_MODE_CANNY;
         } else if (item == mItemPreviewFeatures) {
             mViewMode = VIEW_MODE_FEATURES;
+        } else if (item == mItemMotion) {
+        	mViewMode = VIEW_MODE_ITEMMOTION;
         }
 
         return true;

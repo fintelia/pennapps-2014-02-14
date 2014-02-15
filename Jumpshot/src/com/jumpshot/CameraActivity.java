@@ -1,6 +1,7 @@
 package com.jumpshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -11,6 +12,11 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.video.BackgroundSubtractorMOG;
+import org.opencv.video.BackgroundSubtractorMOG2;
 
 import android.hardware.Camera.Size;
 import android.os.Bundle;
@@ -37,6 +43,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     private SubMenu mColorEffectsMenu;
     private MenuItem[] mResolutionMenuItems;
     private SubMenu mResolutionMenu;
+    private Mat frame;
+    private Mat back;
+    private Mat fore;
+    private BackgroundSubtractorMOG2 bg;
+    private List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+    
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -45,6 +57,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
+                    
+                    bg = new BackgroundSubtractorMOG2(2, 3, false);
+                    frame = new Mat();
+                    back = new Mat();
+                    fore = new Mat();
+                    
                     mOpenCvCameraView.enableView();
                     mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
                 } break;
@@ -74,6 +92,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
         mOpenCvCameraView.setCvCameraViewListener(this);
+        
+       
     }
 
     @Override
@@ -104,7 +124,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        return inputFrame.rgba();
+    	contours.clear();
+    	Imgproc.cvtColor(inputFrame.rgba(), frame, Imgproc.COLOR_RGBA2RGB);
+    	bg.apply(frame, fore);
+    	Imgproc.erode(fore, fore, new Mat());
+    	Imgproc.dilate(fore, fore, new Mat());
+    	Imgproc.findContours(fore, contours, new Mat() , Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+    	Imgproc.drawContours(frame, contours, -1, new Scalar(255,0,0));
+    	Log.i("Frame:", "Drew contours");
+        return frame;
     }
 
     @Override
