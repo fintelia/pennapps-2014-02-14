@@ -46,7 +46,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     private Mat frame;
     private Mat back;
     private Mat fore;
-    private BackgroundSubtractorMOG2 bg;
+    private BackgroundSubtractorMOG bg;
     private List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
     
 
@@ -58,7 +58,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
                     
-                    bg = new BackgroundSubtractorMOG2(2, 3, false);
+                    bg = new BackgroundSubtractorMOG(64, 3, 0.2);
                     frame = new Mat();
                     back = new Mat();
                     fore = new Mat();
@@ -126,13 +126,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2, O
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
     	contours.clear();
     	Imgproc.cvtColor(inputFrame.rgba(), frame, Imgproc.COLOR_RGBA2RGB);
-    	bg.apply(frame, fore);
+    	bg.apply(frame, fore, 0.05);
     	Imgproc.erode(fore, fore, new Mat());
     	Imgproc.dilate(fore, fore, new Mat());
-    	Imgproc.findContours(fore, contours, new Mat() , Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
-    	Imgproc.drawContours(frame, contours, -1, new Scalar(255,0,0));
+    	//Imgproc.findContours(fore, contours, new Mat() , Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+    	//Imgproc.drawContours(frame, contours, -1, new Scalar(255,0,0));
     	Log.i("Frame:", "Drew contours");
-        return frame;
+    	//Imgproc.cvtColor(fore,fore,Imgproc.COLOR_GRAY2BGRA);
+        return fore;
     }
 
     @Override

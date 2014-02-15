@@ -14,18 +14,24 @@ public class Main extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button submit=(Button)findViewById(R.id.submit);
-        submit.setOnClickListener(onSubmit);
+        submit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent myIntent=new Intent(view.getContext(), CameraActivity.class );
+                startActivityForResult(myIntent,0);
+
+            }
+        });
+        Button acc = (Button)findViewById(R.id.acc);
+        acc.setOnClickListener(new View.OnClickListener() {
+        	@Override
+        	public void onClick(View view) {
+        		Intent myIntent=new Intent(view.getContext(), AccActivity.class );
+                startActivityForResult(myIntent,0);
+        	}
+        });
     }
-
-    private View.OnClickListener onSubmit=new View.OnClickListener() {
-
-        @Override
-        public void onClick(View view) {
-            Intent myIntent=new Intent(view.getContext(), CameraActivity.class );
-            startActivityForResult(myIntent,0);
-
-        }
-    };
 
 
     @Override

@@ -18,4 +18,12 @@
         android:layout_marginTop="96dp"
         android:text="Start" />
 
+    <Button
+        android:id="@+id/acc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/submit"
+        android:layout_centerVertical="true"
+        android:text="Accelerometer" />
+
 </RelativeLayout>

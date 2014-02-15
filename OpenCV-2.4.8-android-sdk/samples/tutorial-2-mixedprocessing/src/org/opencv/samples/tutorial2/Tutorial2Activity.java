@@ -61,7 +61,7 @@ public class Tutorial2Activity extends Activity implements CvCameraViewListener2
 
                     // Load native library after(!) OpenCV initialization
                     System.loadLibrary("mixed_sample");
-                    bg = new BackgroundSubtractorMOG2(3,16,true);
+                    bg = new BackgroundSubtractorMOG2(32,16,true);
 
                     mOpenCvCameraView.enableView();
                 } break;
