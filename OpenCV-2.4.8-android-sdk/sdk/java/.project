@@ -30,10 +30,4 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<variableList>
-		<variable>
-			<name>NDK_HOME</name>
-			<value>file:/Users/agicsaki/Downloads/android-ndk-r9c</value>
-		</variable>
-	</variableList>
 </projectDescription>
