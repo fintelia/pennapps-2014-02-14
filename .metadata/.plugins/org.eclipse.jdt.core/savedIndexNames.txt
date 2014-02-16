@@ -11,4 +11,3 @@ INDEX VERSION 1.126+/Users/spencer/pennapps-2014-02-14/.metadata/.plugins/org.ec
 2428917482.index
 3242999314.index
 2786303050.index
-2058867609.index

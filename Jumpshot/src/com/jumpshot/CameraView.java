@@ -9,6 +9,9 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -16,9 +19,24 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
     private static final String TAG = "Sample::Tutorial3View";
     private String mPictureFileName;
+    private MediaPlayer _shootMP;
 
     public CameraView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+    
+    public void shootSound()
+    {
+        AudioManager meng = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        int volume = meng.getStreamVolume( AudioManager.STREAM_NOTIFICATION);
+
+        if (volume != 0)
+        {
+            if (_shootMP == null)
+                _shootMP = MediaPlayer.create(getContext(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
+            if (_shootMP != null)
+                _shootMP.start();
+        }
     }
 
     public List<String> getEffectList() {
@@ -67,6 +85,7 @@ public class CameraView extends JavaCameraView implements PictureCallback {
 
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
+    	shootSound();
         Log.i(TAG, "Saving a bitmap to file");
         // The camera preview was automatically stopped. Start it again.
         mCamera.startPreview();
