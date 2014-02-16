@@ -9,8 +9,6 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
-<<<<<<< HEAD
-=======
     <style name="FullscreenTheme" parent="android:Theme.Holo">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
@@ -22,6 +20,5 @@
     <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
         <item name="android:background">@color/black_overlay</item>
     </style>
->>>>>>> 2c6a557dcf8a30edbb1fe4b68d6aa719349ac168
 
 </resources>
